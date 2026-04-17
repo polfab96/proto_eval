@@ -1,9 +1,11 @@
 [project]
 name = "proto-eval"
-version = "0.1.0"
-description = "Add your description here"
+version = "0.2.6"
+description = "Convert TIF files to JPEG and perform automated FIJI/ImageJ evaluation with particle analysis"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.10"
 dependencies = [
     "pillow>=12.2.0",
+    "pyimagej>=1.4.1",
+    "scyjava>=1.10.1",
 ]
