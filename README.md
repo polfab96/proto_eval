@@ -27,15 +27,24 @@ Run the script with source and destination directories:
 python main.py "/path/to/source/tif" "/path/to/output"
 ```
 
-### Separate FIJI Evaluation
+### Command-Line Options
 
-If you already have converted JPEG files organized in `Picture_00s_JPG` and `Picture_10s_JPG` folders, you can run only the FIJI analysis:
+- `--no-fiji`: Skip FIJI evaluation and only convert TIF to JPEG
+  ```bash
+  python main.py "/path/to/source" "/path/to/output" --no-fiji
+  ```
 
-```bash
-python main.py "/path/to/jpeg/root/folder" "/path/to/results" --fiji-only
-```
+- `--fiji-only`: Run only FIJI evaluation on existing JPEG folders (skip TIF conversion)
+  ```bash
+  python main.py "/path/to/jpeg_folders" "/path/to/results" --fiji-only
+  ```
 
-*Note: The source directory must contain the `Picture_00s_JPG` and `Picture_10s_JPG` subfolders.*
+  *Note: The source directory must contain the `Picture_00s_JPG` and `Picture_10s_JPG` subfolders.*
+
+- `--output-dir`: Save FIJI results to a different directory than JPEG files
+  ```bash
+  python main.py "/path/to/source" "/path/to/jpeg" --output-dir "/path/to/results"
+  ```
 
 ### Examples
 
@@ -56,23 +65,6 @@ python main.py "/path/to/existing/jpeg/root/folder" "/path/to/results" --fiji-on
 
 *Note: The source directory must contain the `Picture_00s_JPG` and `Picture_10s_JPG` subfolders with JPEG files. Both folders must contain the same number of images.*
 
-### Command-Line Options
-
-- `--no-fiji`: Skip FIJI evaluation and only convert TIF to JPEG
-  ```bash
-  python main.py "/path/to/source" "/path/to/output" --no-fiji
-  ```
-
-- `--fiji-only`: Run only FIJI evaluation on existing JPEG folders (skip TIF conversion)
-  ```bash
-  python main.py "/path/to/jpeg_folders" "/path/to/results" --fiji-only
-  ```
-
-- `--output-dir`: Save FIJI results to a different directory than JPEG files
-  ```bash
-  python main.py "/path/to/source" "/path/to/jpeg" --output-dir "/path/to/results"
-  ```
-
 ## Output Files
 
 After the workflow completes, you'll find:
@@ -83,14 +75,12 @@ After the workflow completes, you'll find:
 
 - **FIJI Results** (in output directory):
   - `Particle_Analysis_Results.csv` - Particle measurements table with columns:
-    - `X`, `Y` - Particle center coordinates
-    - `Area` - Particle area in pixels
-    - `Perimeter` - Particle perimeter
-    - `Circularity` - Shape measurement (0-1, where 1 is perfect circle)
-    - `Solidity` - Convexity measurement
-    - `Slice` - Stack slice number (time point)
-    - Additional shape and intensity measurements
-
+    - `Slice` - Original slice label or JPEG filename for the time point image
+    - `Count` - Number of particles detected in the slice
+    - `Total Area` - Total area of all detected particles in pixels
+    - `Average Size` - Average particle area in pixels for that slice
+    - `%Area` - Percentage of the slice area occupied by detected particles
+    - `Mean` - Average mean intensity of the detected particles
 ## Installation
 
 ### Prerequisites
@@ -211,15 +201,6 @@ Supported formats: `.tif`, `.tiff`
 - 8-bit and palette mode images are converted to 8-bit grayscale
 
 ## Troubleshooting
-
-### Java Heap Memory Issues
-
-If you get out-of-memory errors, the script reserves 15GB by default. To modify:
-
-Edit `main.py` and change the `fiji_eval.py` initialization:
-```python
-scyjava.config.add_option('-Xmx10g')  # Change 10g to desired amount
-```
 
 ### Missing JPEG subfolders
 
